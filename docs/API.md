@@ -1,6 +1,6 @@
 # API
 
-[以中文版查看此文](./API_zh-CN.md)
+[以中文版查看此文](https://dvajs.com/api/)
 
 ## Export Files
 ### dva
@@ -27,7 +27,7 @@ Export the api of [redux-saga](https://github.com/yelouafi/redux-saga).
 
 ### dva/dynamic
 
-A util method to load React Component dynamically, based on [react-async-component](https://github.com/ctrlplusb/react-async-component).
+Util method to load React Component and dva model dynamically.
 
 e.g.
 
@@ -43,6 +43,12 @@ const UserPageComponent = dynamic({
 });
 ```
 
+`opts` include:
+
+* app: dva instance
+* models: function which return promise, and the promise return dva model
+* component：function which return promise, and the promise return React Component
+
 ## dva API
 ### `app = dva(opts)`
 
@@ -56,9 +62,9 @@ Create app, and return dva instance. (Notice: dva support multiple instances.)
 e.g. use `browserHistory`:
 
 ```js
-import { browserHistory } from 'dva/router';
+import createHistory from 'history/createBrowserHistory';
 const app = dva({
-  history: browserHistory,
+  history: createHistory(),
 });
 ```
 
@@ -157,8 +163,6 @@ const app = dva({
 });
 ```
 
-View [examples/count-undo](https://github.com/dvajs/dva/blob/master/examples/count-undo/index.js) for details.
-
 #### `onEffect(fn)`
 
 Wrap effect execute.
@@ -206,6 +210,14 @@ Register model, view [#Model](#model)  for details.
 
 Unregister model.
 
+### `app.replaceModel(model)`
+
+> Only available after `app.start()` got called
+
+Replace an existing model with a new one, comparing by the namespace. If no one matches, add the new one. 
+
+After called, old `reducers`, `effects`, `subscription` will be replaced with the new ones, while original state is kept, which means it's useful for HMR.
+
 ### `app.router(({ history, app }) => RouterConfig)`
 
 Register router config.
@@ -223,7 +235,7 @@ app.router(({ history }) => {
 });
 ```
 
-Recommend using seperate file to config router. Then we can do hmr with [babel-plugin-dva-hmr](https://github.com/dvajs/babel-plugin-dva-hmr). e.g.
+Recommend using separate file to config router. Then we can do hmr with [babel-plugin-dva-hmr](https://github.com/dvajs/babel-plugin-dva-hmr). e.g.
 
 ```js
 app.router(require('./router'));
@@ -317,7 +329,7 @@ Store reducers in key/value Object. reducer is the only place to modify `state`.
 
 `(state, action) => newState` or `[(state, action) => newState, enhancer]`
 
-View https://github.com/dvajs/dva/blob/master/test/reducers-test.js for details.
+View https://github.com/dvajs/dva/blob/master/packages/dva-core/test/reducers.test.js for details.
 
 ### effects
 
@@ -332,7 +344,7 @@ type includes:
 * `throttle`
 * `watcher`
 
-View https://github.com/dvajs/dva/blob/master/test/effects-test.js for details.
+View https://github.com/dvajs/dva/blob/master/packages/dva-core/test/effects.test.js for details.
 
 ### subscriptions
 
@@ -340,4 +352,4 @@ Store subscriptions in key/value Object. Subscription is used for subscribing da
 
 `({ dispatch, history }, done) => unlistenFunction`
 
-Notice: if we want to unregister a model with `app.unmodel()`, it's subscriptions must return unsubscribe method.
+Notice: if we want to unregister a model with `app.unmodel()` or `app.replaceModel()`, it's subscriptions must return unsubscribe method.

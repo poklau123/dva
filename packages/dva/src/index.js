@@ -63,7 +63,9 @@ export default function (opts = {}) {
       `[app.start] router must be registered before app.start()`,
     );
 
-    oldAppStart.call(app);
+    if (!app._store) {
+      oldAppStart.call(app);
+    }
     const store = app._store;
 
     // export _getProvider for HMR
@@ -89,11 +91,12 @@ function isString(str) {
 }
 
 function getProvider(store, app, router) {
-  return extraProps => (
+  const DvaRoot = extraProps => (
     <Provider store={store}>
       { router({ app, history: app._history, ...extraProps }) }
     </Provider>
   );
+  return DvaRoot;
 }
 
 function render(container, store, app, router) {

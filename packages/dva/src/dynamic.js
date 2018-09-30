@@ -29,6 +29,10 @@ function asyncComponent(config) {
       this.mounted = true;
     }
 
+    componentWillUnmount() {
+      this.mounted = false;
+    }
+
     load() {
       resolve().then((m) => {
         const AsyncComponent = m.default || m;
@@ -63,7 +67,11 @@ export default function dynamic(config) {
           } else {
             const len = models.length;
             ret.slice(0, len).forEach((m) => {
-              registerModel(app, m);
+              m = m.default || m;
+              if (!Array.isArray(m)) {
+                m = [m];
+              }
+              m.map(_ => registerModel(app, _));
             });
             resolve(ret[len]);
           }

@@ -1,6 +1,6 @@
 # Concepts
 
-[以中文版查看此文](./Concepts_zh-CN.md)
+[以中文版查看此文](https://dvajs.com/guide/concepts.html)
 
 ## Data Flow
 
@@ -12,7 +12,7 @@
 
 `type State = any`
 
-The state tree of your models. Usually, the state is a javascript object(Technically it can be any type), which is a immutable data.
+The state tree of your models. Usually, the state is a JavaScript object (although technically it can be any type) which is immutable data.
 
 In dva, you can access top state tree data by `_store`.
 
@@ -25,7 +25,7 @@ console.log(app._store); // top state
 
 `type AsyncAction = any`
 
-Just like Redux's Action, in dva, action is a plain object that represents an intention to change the state. Actions are the only way to get data into the store. Any data, whether from UI events, network callbacks, or other sources such as WebSockets needs to eventually be dispatched as actions.action.(ps:dispatch is realized through props by connecting components.)
+Just like Redux's Action, in dva, action is a plain object that represents an intention to change the state. Actions are the only way to get data into the store. Any data, whether from UI events, network callbacks, or other sources such as WebSockets needs to eventually be dispatched as actions.action. (PS: dispatch is realized through props by connecting components.)
 
 ```javascript
 dispatch({
@@ -67,7 +67,7 @@ In dva, reducers accumulate current model's state. There are some things need to
 
 ### Effect
 
-In dva, we use [redux-sagas](http://yelouafi.github.io/redux-saga/) to control asynchronous flow.
+In dva, we use [redux-sagas](https://redux-saga.js.org/) to control asynchronous flow.
 You can learn more in [Mostly adequate guide to FP](https://github.com/MostlyAdequate/mostly-adequate-guide).
 
 In our applications, the most well-known side effect is asynchronous operation, it comes from the conception of functional programing, it is called side effect because it makes our function impure, and the same input may not result in the same output.
